@@ -1,14 +1,12 @@
-
 /* ============================================================
    style.css — Персональная bio-link страница "marshall"
    Эстетика: dark anime / hacker / dead inside
-   ВСЕ КОММЕНТАРИИ И ИНСТРУКЦИИ НА РУССКОМ ЯЗЫКЕ
+   ВСЕ КОММЕНТАРИИ НА РУССКОМ ЯЗЫКЕ
    ============================================================ */
 
 /* ------------------------------------------------------------
    БЛОК КОНФИГУРАЦИИ АКТИВОВ
-   Замените пути ниже на свои, если необходимо.
-   Все файлы ищутся в папке "assets/" относительно корня.
+   Замените пути ниже на свои, если необходимо
 ------------------------------------------------------------ */
 :root {
   /* Путь к обоям (левое аниме-изображение) */
@@ -20,7 +18,7 @@
   /* Путь к мини-аватару в статус-пузырьке */
   --status-avatar-path: url("./assets/status-avatar.webp");
   
-  /* Путь к аудиофайлу (задаётся в JS, но можно продублировать) */
+  /* Путь к аудиофайлу */
   --audio-path: "./assets/track.mp3";
 }
 
@@ -28,20 +26,21 @@
    ОСНОВНЫЕ ПЕРЕМЕННЫЕ ЦВЕТОВ И ШРИФТОВ
 ------------------------------------------------------------ */
 :root {
-  /* Палитра в духе "dead inside": почти чёрный, серый, кровавый */
-  --color-bg: #050505;           /* Основной фон страницы */
-  --color-card-bg: rgba(18, 18, 18, 0.75); /* Полупрозрачный фон карточки */
-  --color-border: #2a2a2a;        /* 1px границы */
-  --color-text-primary: #e0e0e0;  /* Основной текст */
-  --color-text-secondary: #9a9a9a;/* Вторичный текст */
-  --color-text-muted: #666666;    /* Приглушённый текст */
-  --color-accent: #a02020;        /* Кроваво-красный акцент */
-  --color-ip: #4a4a4a;            /* Цвет IP-адреса */
-  --font-main: 'Courier New', Courier, monospace; /* Моноширинный шрифт для хакерского вайба */
+  /* Палитра в духе "dead inside" */
+  --color-bg: #050505;
+  --color-card-bg: rgba(18, 18, 18, 0.75);
+  --color-border: #2a2a2a;
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #9a9a9a;
+  --color-text-muted: #666666;
+  --color-accent: #ffffff;
+  --color-accent-soft: #cccccc;
+  --color-ip: #4a4a4a;
+  --font-main: 'Courier New', Courier, monospace;
 }
 
 /* ------------------------------------------------------------
-   БАЗОВЫЙ СБРОС И ОБЩИЕ СТИЛИ
+   БАЗОВЫЙ СБРОС
 ------------------------------------------------------------ */
 * {
   margin: 0;
@@ -56,13 +55,36 @@ html, body {
   font-family: var(--font-main);
   color: var(--color-text-primary);
   overflow-x: hidden;
-  /* Убираем задержку тапов на мобильных */
   touch-action: manipulation;
 }
 
 /* ------------------------------------------------------------
-   СЕТКА ПРОФИЛЯ (DESKTOP)
-   Левая панель ~35%, центр — плавающая карточка
+   КОНТЕЙНЕР ДЛЯ ДОЖДЯ
+------------------------------------------------------------ */
+.rain-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Капли дождя (создаются в JS) */
+.rain-drop {
+  position: absolute;
+  top: -10%;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6));
+  animation: rainFall linear infinite;
+  opacity: 0.7;
+  will-change: transform, opacity;
+}
+
+/* ------------------------------------------------------------
+   СЕТКА ПРОФИЛЯ
 ------------------------------------------------------------ */
 .profile-grid {
   display: flex;
@@ -74,7 +96,7 @@ html, body {
   padding: 20px;
 }
 
-/* Левая визуальная панель (обои) */
+/* Левая визуальная панель */
 .visual-panel {
   position: fixed;
   top: 0;
@@ -83,23 +105,19 @@ html, body {
   height: 100vh;
   overflow: hidden;
   z-index: 0;
-  pointer-events: none; /* Не мешает кликам */
+  pointer-events: none;
 }
 
-/* Фоновое изображение с явным aspect-ratio для предотвращения CLS */
 .visual-panel__image {
   position: absolute;
   inset: 0;
   background-image: var(--wallpaper-path);
   background-size: cover;
   background-position: center center;
-  /* Монохромный фильтр для аниме-эстетики */
   filter: grayscale(100%) contrast(1.1) brightness(0.7);
-  /* Лёгкая анимация появления (только transform/opacity) */
   animation: fadeInLeft 0.8s ease-out;
 }
 
-/* Вуаль поверх обоев для затемнения и читаемости */
 .visual-panel__overlay {
   position: absolute;
   inset: 0;
@@ -121,8 +139,33 @@ html, body {
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   padding: 24px;
-  /* Анимация появления */
-  animation: cardFloatIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  
+  /* Анимация появления и плавания */
+  animation: cardFloatIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) both,
+             cardFloating 8s ease-in-out infinite 0.5s;
+  
+  will-change: transform;
+}
+
+/* ------------------------------------------------------------
+   АНИМАЦИЯ ПЛАВАНИЯ КАРТОЧКИ
+------------------------------------------------------------ */
+@keyframes cardFloating {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
+  25% {
+    transform: translate(-5px, -8px) rotate(-0.5deg);
+  }
+  50% {
+    transform: translate(5px, -12px) rotate(0.5deg);
+  }
+  75% {
+    transform: translate(-3px, -6px) rotate(-0.3deg);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg);
+  }
 }
 
 /* ------------------------------------------------------------
@@ -135,7 +178,6 @@ html, body {
   margin-bottom: 20px;
 }
 
-/* Обёртка аватара с фиксированными размерами (против CLS) */
 .avatar-wrap {
   position: relative;
   width: 80px;
@@ -150,7 +192,6 @@ html, body {
   object-fit: cover;
   border: 2px solid var(--color-border);
   filter: grayscale(0.4) contrast(1.1);
-  /* Трансформация при наведении — только transform */
   transition: transform 0.3s ease;
 }
 
@@ -158,7 +199,6 @@ html, body {
   transform: scale(1.05);
 }
 
-/* Статус-пузырёк */
 .status-bubble {
   position: absolute;
   bottom: -4px;
@@ -187,7 +227,6 @@ html, body {
   filter: grayscale(0.8);
 }
 
-/* Идентичность: ник + IP */
 .identity {
   display: flex;
   flex-direction: column;
@@ -202,12 +241,12 @@ html, body {
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--color-text-primary);
-  text-shadow: 0 0 10px rgba(160, 32, 32, 0.4);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .crown-icon {
   color: var(--color-accent);
-  filter: drop-shadow(0 0 4px rgba(160, 32, 32, 0.7));
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
   transition: transform 0.2s ease;
 }
 
@@ -222,7 +261,7 @@ html, body {
 }
 
 /* ------------------------------------------------------------
-   СТАТУС-КАРТОЧКА (сообщение + музыка)
+   СТАТУС-КАРТОЧКА
 ------------------------------------------------------------ */
 .status-card {
   border: 1px solid var(--color-border);
@@ -289,7 +328,6 @@ html, body {
   gap: 12px;
 }
 
-/* Кнопка воспроизведения */
 .play-btn {
   background: none;
   border: 1px solid var(--color-border);
@@ -303,19 +341,17 @@ html, body {
   color: var(--color-text-primary);
   transition: transform 0.15s ease, border-color 0.2s ease;
   flex-shrink: 0;
-  /* Анимация только transform/opacity */
 }
 
 .play-btn:hover {
   transform: scale(1.08);
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-soft);
 }
 
 .play-btn:active {
   transform: scale(0.95);
 }
 
-/* Прогресс-контейнер */
 .progress-container {
   position: relative;
   flex: 1;
@@ -326,31 +362,29 @@ html, body {
   overflow: hidden;
 }
 
-/* Шкала прогресса — анимируем transform: scaleX для 60fps */
 .progress-bar {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  background: var(--color-accent);
+  background: linear-gradient(90deg, #888888, #ffffff);
   border-radius: 3px;
   transform-origin: left center;
-  transform: scaleX(0); /* Начальное состояние */
+  transform: scaleX(0);
   will-change: transform;
 }
 
-/* Ползунок прогресса */
 .progress-thumb {
   position: absolute;
   top: 50%;
   left: 0;
   width: 14px;
   height: 14px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  box-shadow: 0 0 8px rgba(160, 32, 32, 0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
   pointer-events: none;
   transition: transform 0.1s ease;
 }
@@ -359,7 +393,6 @@ html, body {
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Таймстампы */
 .time-stamps {
   display: flex;
   gap: 4px;
@@ -369,7 +402,7 @@ html, body {
 }
 
 /* ------------------------------------------------------------
-   АНИМАЦИИ (только transform/opacity)
+   АНИМАЦИИ
 ------------------------------------------------------------ */
 @keyframes fadeInLeft {
   from {
@@ -393,16 +426,31 @@ html, body {
   }
 }
 
+@keyframes rainFall {
+  0% {
+    transform: translateY(-10vh) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(110vh) translateX(-20px);
+    opacity: 0;
+  }
+}
+
 /* ------------------------------------------------------------
    МЕДИА-ЗАПРОСЫ ДЛЯ МОБИЛЬНЫХ
 ------------------------------------------------------------ */
 @media (max-width: 768px) {
-  /* Скрываем левую панель с обоями */
   .visual-panel {
     display: none;
   }
   
-  /* Центрируем карточку без учёта левой колонки */
   .profile-grid {
     padding: 16px;
   }
@@ -411,9 +459,9 @@ html, body {
     width: 100%;
     max-width: 420px;
     padding: 18px;
-    /* Уменьшаем размытие для производительности на мобильных */
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
+    animation-duration: 12s;
   }
   
   .nickname {
