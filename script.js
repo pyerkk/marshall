@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Создаём аудио-объект
   const audio = new Audio(CONFIG.audioPath);
   audio.preload = 'metadata';
-  audio.volume = 0.3; // Устанавливаем громкость 30%
+  audio.volume = 0.15; // Устанавливаем громкость 30%
   
   // Получаем ссылки на DOM-элементы
   const playBtn = document.getElementById(CONFIG.elements.playBtn);
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   trackArtistEl.textContent = CONFIG.trackArtist;
   
   // Устанавливаем начальную громкость
-  volumeSlider.value = 30;
+  volumeSlider.value = 15;
   
   // Переменные состояния
   let isPlaying = false;
