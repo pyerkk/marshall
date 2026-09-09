@@ -554,8 +554,8 @@ html, body {
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease;
-  margin-left: 8px; /* Сдвиг вправо */
-  margin-top: 8px; /* Сдвиг вниз */
+  margin-left: 24px; /* Сдвиг вправо */
+  margin-top: 24px; /* Сдвиг вниз */
 }
 
 .telegram-link:hover {
