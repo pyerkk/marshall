@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,23 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>marshall — dead inside // bio</title>
   
-  <!-- Подключаем внешние стили (style.css) -->
+  <!-- Подключаем внешние стили -->
   <link rel="stylesheet" href="style.css">
   
-  <!-- Предзагрузка критических изображений для ускорения отображения -->
+  <!-- Предзагрузка критических изображений -->
   <link rel="preload" as="image" href="./assets/wallpaper.webp">
   <link rel="preload" as="image" href="./assets/avatar.webp">
   <link rel="preload" as="image" href="./assets/status-avatar.webp">
 </head>
 <body>
+  <!-- Контейнер для дождя (создаётся через JS) -->
+  <div class="rain-container" id="rainContainer" aria-hidden="true"></div>
+  
   <!-- Основная сетка: левая колонка (обои) + центральная карточка -->
   <main class="profile-grid">
     
     <!-- Левая часть: аниме-обои, скрывается на мобильных -->
     <aside class="visual-panel" aria-hidden="true">
-      <!-- Фоновое изображение задано через CSS, здесь просто контейнер -->
       <div class="visual-panel__image"></div>
-      <!-- Полупрозрачная вуаль для лучшей читаемости -->
       <div class="visual-panel__overlay"></div>
     </aside>
 
@@ -32,7 +32,6 @@
       <!-- Шапка: аватар, ник, корона, IP -->
       <header class="card-header">
         <div class="avatar-wrap">
-          <!-- Аватар. Размеры заданы явно для предотвращения CLS -->
           <img src="./assets/avatar.webp" alt="Аватар marshall" width="80" height="80" class="avatar-img">
           
           <!-- Статус-пузырёк с мини-аватаром -->
@@ -44,7 +43,7 @@
         <div class="identity">
           <h1 class="nickname">
             marshall
-            <!-- Инлайн SVG-корона, лёгкая и острая -->
+            <!-- Инлайн SVG-корона -->
             <svg class="crown-icon" viewBox="0 0 24 24" width="18" height="18" aria-label="Корона">
               <path fill="currentColor" d="M5 16L3 5l5.5 4L12 4l3.5 5L21 5l-2 11H5zm14 2H5v2h14v-2z"/>
             </svg>
@@ -70,7 +69,6 @@
           <div class="player-controls">
             <!-- Кнопка play/pause -->
             <button class="play-btn" id="playBtn" aria-label="Воспроизвести или пауза">
-              <!-- Инлайн SVG иконки play/pause, переключаются в JS -->
               <svg class="icon-play" viewBox="0 0 24 24" width="28" height="28">
                 <path fill="currentColor" d="M8 5v14l11-7L8 5z"/>
               </svg>
@@ -81,9 +79,7 @@
             
             <!-- Прогресс-бар -->
             <div class="progress-container" id="progressContainer">
-              <!-- Шкала прогресса. Анимация через transform для 60fps -->
               <div class="progress-bar" id="progressBar"></div>
-              <!-- Ползунок (опционально) -->
               <div class="progress-thumb" id="progressThumb"></div>
             </div>
             
@@ -100,7 +96,7 @@
     </section>
   </main>
 
-  <!-- Подключаем внешний скрипт (script.js). defer для неблокирующей загрузки -->
+  <!-- Подключаем внешний скрипт -->
   <script src="script.js" defer></script>
 </body>
 </html>
