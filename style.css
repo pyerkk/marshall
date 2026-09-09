@@ -10,13 +10,13 @@
 ------------------------------------------------------------ */
 :root {
   /* Путь к обоям (левое аниме-изображение) */
-  --wallpaper-path: url("./assets/wallpaper.webp");
+  --wallpaper-path: url("./assets/wallpaper.jpg");
   
   /* Путь к главному аватару профиля */
-  --avatar-path: url("./assets/avatar.webp");
+  --avatar-path: url("./assets/avatar.jpg");
   
   /* Путь к мини-аватару в статус-пузырьке */
-  --status-avatar-path: url("./assets/status-avatar.webp");
+  --status-avatar-path: url("./assets/status-avatar.jpg");
   
   /* Путь к аудиофайлу */
   --audio-path: "./assets/track.mp3";
