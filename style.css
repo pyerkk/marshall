@@ -548,3 +548,27 @@ html, body {
     font-size: 1.3rem;
   }
 }
+/* Иконка Telegram */
+.telegram-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.telegram-link:hover {
+  transform: scale(1.1);
+}
+
+.telegram-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: grayscale(0.3);
+  transition: filter 0.2s ease;
+}
+
+.telegram-link:hover .telegram-icon {
+  filter: grayscale(0);
+}
