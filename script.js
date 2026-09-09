@@ -1,5 +1,5 @@
 /* ============================================================
-   script.js — Управление аудио, прогрессом и дождём
+   script.js — Управление аудио, прогрессом, дождём и анимацией
    Эстетика: dark anime / hacker / dead inside
    ВСЕ КОММЕНТАРИИ НА РУССКОМ ЯЗЫКЕ
    ============================================================ */
@@ -12,10 +12,10 @@ const CONFIG = {
   audioPath: './assets/track.mp3',
   
   // Название трека
-  trackTitle: 'вконтакте',
+  trackTitle: 'Название трека',
   
   // Имя исполнителя
-  trackArtist: 'хинков',
+  trackArtist: 'Исполнитель',
   
   // Настройки дождя
   rain: {
@@ -51,9 +51,42 @@ const CONFIG = {
     totalTime: 'totalTime',
     trackTitle: 'trackTitle',
     trackArtist: 'trackArtist',
-    rainContainer: 'rainContainer'
+    rainContainer: 'rainContainer',
+    volumeSlider: 'volumeSlider'
   }
 };
+
+/* ------------------------------------------------------------
+   АНИМАЦИЯ ЗАГОЛОВКА ВКЛАДКИ (печатание и удаление)
+------------------------------------------------------------ */
+const tabTitle = '@it6was9';
+let titleIndex = 0;
+let isDeleting = false;
+
+function animateTabTitle() {
+  const currentTitle = tabTitle.substring(0, titleIndex);
+  document.title = currentTitle;
+  
+  if (!isDeleting) {
+    // Печатаем
+    titleIndex++;
+    if (titleIndex === tabTitle.length) {
+      isDeleting = true;
+      setTimeout(animateTabTitle, 2000); // Пауза перед удалением
+      return;
+    }
+  } else {
+    // Удаляем
+    titleIndex--;
+    if (titleIndex === 0) {
+      isDeleting = false;
+      setTimeout(animateTabTitle, 500); // Пауза перед печатанием
+      return;
+    }
+  }
+  
+  setTimeout(animateTabTitle, isDeleting ? 100 : 150);
+}
 
 /* ------------------------------------------------------------
    ФУНКЦИЯ СОЗДАНИЯ ДОЖДЯ
@@ -100,12 +133,16 @@ function createRain() {
    ИНИЦИАЛИЗАЦИЯ
 ------------------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
+  // Запускаем анимацию заголовка вкладки
+  animateTabTitle();
+  
   // Создаём дождь
   createRain();
   
   // Создаём аудио-объект
   const audio = new Audio(CONFIG.audioPath);
   audio.preload = 'metadata';
+  audio.volume = 0.3; // Устанавливаем громкость 30%
   
   // Получаем ссылки на DOM-элементы
   const playBtn = document.getElementById(CONFIG.elements.playBtn);
@@ -118,10 +155,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalTimeEl = document.getElementById(CONFIG.elements.totalTime);
   const trackTitleEl = document.getElementById(CONFIG.elements.trackTitle);
   const trackArtistEl = document.getElementById(CONFIG.elements.trackArtist);
+  const volumeSlider = document.getElementById(CONFIG.elements.volumeSlider);
   
   // Устанавливаем текст трека и исполнителя
   trackTitleEl.textContent = CONFIG.trackTitle;
   trackArtistEl.textContent = CONFIG.trackArtist;
+  
+  // Устанавливаем начальную громкость
+  volumeSlider.value = 30;
   
   // Переменные состояния
   let isPlaying = false;
@@ -214,6 +255,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   /* ------------------------------------------------------------
+     ОБРАБОТЧИК ГРОМКОСТИ
+  ------------------------------------------------------------ */
+  volumeSlider.addEventListener('input', (e) => {
+    const volume = e.target.value / 100;
+    audio.volume = volume;
+    console.log('Громкость:', Math.round(volume * 100) + '%');
+  });
+  
+  /* ------------------------------------------------------------
      ОБРАБОТЧИКИ СОБЫТИЙ АУДИО
   ------------------------------------------------------------ */
   audio.addEventListener('loadedmetadata', () => {
@@ -288,42 +338,28 @@ document.addEventListener('DOMContentLoaded', () => {
   ------------------------------------------------------------ */
   setPlayingState(false);
   audio.load();
+  
+  // Пытаемся автоматически запустить воспроизведение
+  audio.play().then(() => {
+    setPlayingState(true);
+    startAnimationLoop();
+    console.log('Автовоспроизведение запущено');
+  }).catch(err => {
+    console.log('Автовоспроизведение заблокировано браузером. Нажмите play.');
+    setPlayingState(false);
+    
+    // Автозапуск после первого взаимодействия с страницей
+    document.addEventListener('click', () => {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          setPlayingState(true);
+          startAnimationLoop();
+        }).catch(error => {
+          console.log('Ошибка воспроизведения:', error);
+        });
+      }
+    }, { once: true });
+  });
+  
   console.log('Аудио инициализировано:', CONFIG.audioPath);
-});
-
-/* ------------------------------------------------------------
-   АНИМАЦИЯ ЗАГОЛОВКА ВКЛАДКИ (печатание и удаление)
------------------------------------------------------------- */
-const tabTitle = '@it6was9';
-let titleIndex = 0;
-let isDeleting = false;
-
-function animateTabTitle() {
-  const currentTitle = tabTitle.substring(0, titleIndex);
-  document.title = currentTitle;
-  
-  if (!isDeleting) {
-    // Печатаем
-    titleIndex++;
-    if (titleIndex === tabTitle.length) {
-      isDeleting = true;
-      setTimeout(animateTabTitle, 2000); // Пауза перед удалением
-      return;
-    }
-  } else {
-    // Удаляем
-    titleIndex--;
-    if (titleIndex === 0) {
-      isDeleting = false;
-      setTimeout(animateTabTitle, 500); // Пауза перед печатанием
-      return;
-    }
-  }
-  
-  setTimeout(animateTabTitle, isDeleting ? 100 : 150);
-}
-
-// Запускаем анимацию после загрузки страницы
-document.addEventListener('DOMContentLoaded', () => {
-  animateTabTitle();
 });
