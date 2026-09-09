@@ -1,1 +1,106 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>marshall — dead inside // bio</title>
+  
+  <!-- Подключаем внешние стили (style.css) -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Предзагрузка критических изображений для ускорения отображения -->
+  <link rel="preload" as="image" href="./assets/wallpaper.webp">
+  <link rel="preload" as="image" href="./assets/avatar.webp">
+  <link rel="preload" as="image" href="./assets/status-avatar.webp">
+</head>
+<body>
+  <!-- Основная сетка: левая колонка (обои) + центральная карточка -->
+  <main class="profile-grid">
+    
+    <!-- Левая часть: аниме-обои, скрывается на мобильных -->
+    <aside class="visual-panel" aria-hidden="true">
+      <!-- Фоновое изображение задано через CSS, здесь просто контейнер -->
+      <div class="visual-panel__image"></div>
+      <!-- Полупрозрачная вуаль для лучшей читаемости -->
+      <div class="visual-panel__overlay"></div>
+    </aside>
+
+    <!-- Центральная плавающая карточка -->
+    <section class="floating-card">
+      
+      <!-- Шапка: аватар, ник, корона, IP -->
+      <header class="card-header">
+        <div class="avatar-wrap">
+          <!-- Аватар. Размеры заданы явно для предотвращения CLS -->
+          <img src="./assets/avatar.webp" alt="Аватар marshall" width="80" height="80" class="avatar-img">
+          
+          <!-- Статус-пузырёк с мини-аватаром -->
+          <div class="status-bubble" title="Статус: сидел под прокси">
+            <img src="./assets/status-avatar.webp" alt="Статус-аватар" width="24" height="24" class="status-avatar">
+          </div>
+        </div>
+        
+        <div class="identity">
+          <h1 class="nickname">
+            marshall
+            <!-- Инлайн SVG-корона, лёгкая и острая -->
+            <svg class="crown-icon" viewBox="0 0 24 24" width="18" height="18" aria-label="Корона">
+              <path fill="currentColor" d="M5 16L3 5l5.5 4L12 4l3.5 5L21 5l-2 11H5zm14 2H5v2h14v-2z"/>
+            </svg>
+          </h1>
+          <span class="ip-text">198.144.66.78</span>
+        </div>
+      </header>
+
+      <!-- Статус-карточка с сообщением и музыкой -->
+      <div class="status-card">
+        <div class="status-message">
+          <span class="sub-username">fearmyveins</span>
+          <span class="status-russian">сидел под прокси в пять утра</span>
+        </div>
+        
+        <!-- Музыкальный виджет -->
+        <div class="music-widget">
+          <div class="music-info">
+            <span class="track-title" id="trackTitle">Название трека</span>
+            <span class="track-artist" id="trackArtist">Исполнитель</span>
+          </div>
+          
+          <div class="player-controls">
+            <!-- Кнопка play/pause -->
+            <button class="play-btn" id="playBtn" aria-label="Воспроизвести или пауза">
+              <!-- Инлайн SVG иконки play/pause, переключаются в JS -->
+              <svg class="icon-play" viewBox="0 0 24 24" width="28" height="28">
+                <path fill="currentColor" d="M8 5v14l11-7L8 5z"/>
+              </svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" width="28" height="28" style="display:none;">
+                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            </button>
+            
+            <!-- Прогресс-бар -->
+            <div class="progress-container" id="progressContainer">
+              <!-- Шкала прогресса. Анимация через transform для 60fps -->
+              <div class="progress-bar" id="progressBar"></div>
+              <!-- Ползунок (опционально) -->
+              <div class="progress-thumb" id="progressThumb"></div>
+            </div>
+            
+            <!-- Таймстампы -->
+            <div class="time-stamps">
+              <span class="current-time" id="currentTime">0:00</span>
+              <span class="separator">/</span>
+              <span class="total-time" id="totalTime">0:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </section>
+  </main>
+
+  <!-- Подключаем внешний скрипт (script.js). defer для неблокирующей загрузки -->
+  <script src="script.js" defer></script>
+</body>
+</html>
