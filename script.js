@@ -290,3 +290,40 @@ document.addEventListener('DOMContentLoaded', () => {
   audio.load();
   console.log('Аудио инициализировано:', CONFIG.audioPath);
 });
+
+/* ------------------------------------------------------------
+   АНИМАЦИЯ ЗАГОЛОВКА ВКЛАДКИ (печатание и удаление)
+------------------------------------------------------------ */
+const tabTitle = '@it6was9';
+let titleIndex = 0;
+let isDeleting = false;
+
+function animateTabTitle() {
+  const currentTitle = tabTitle.substring(0, titleIndex);
+  document.title = currentTitle;
+  
+  if (!isDeleting) {
+    // Печатаем
+    titleIndex++;
+    if (titleIndex === tabTitle.length) {
+      isDeleting = true;
+      setTimeout(animateTabTitle, 2000); // Пауза перед удалением
+      return;
+    }
+  } else {
+    // Удаляем
+    titleIndex--;
+    if (titleIndex === 0) {
+      isDeleting = false;
+      setTimeout(animateTabTitle, 500); // Пауза перед печатанием
+      return;
+    }
+  }
+  
+  setTimeout(animateTabTitle, isDeleting ? 100 : 150);
+}
+
+// Запускаем анимацию после загрузки страницы
+document.addEventListener('DOMContentLoaded', () => {
+  animateTabTitle();
+});
