@@ -57,7 +57,7 @@ const CONFIG = {
 /* ------------------------------------------------------------
    АНИМАЦИЯ ЗАГОЛОВКА ВКЛАДКИ (печатание и удаление)
 ------------------------------------------------------------ */
-const tabTitle = '@it6was9';
+const tabTitle = 'it6was9?';
 let titleIndex = 0;
 let isDeleting = false;
 let pauseTimeout = null;
