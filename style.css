@@ -561,8 +561,8 @@ html, body {
 }
 
 .telegram-icon {
-  width: 24px;
-  height: 24px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   object-fit: cover;
   filter: grayscale(0.3);
