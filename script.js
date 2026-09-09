@@ -12,10 +12,10 @@ const CONFIG = {
   audioPath: './assets/track.mp3',
   
   // Название трека
-  trackTitle: 'Название трека',
+  trackTitle: 'вконтакте',
   
   // Имя исполнителя
-  trackArtist: 'Исполнитель',
+  trackArtist: 'хинков',
   
   // Настройки дождя
   rain: {
@@ -62,6 +62,7 @@ const CONFIG = {
 const tabTitle = '@it6was9';
 let titleIndex = 0;
 let isDeleting = false;
+let pauseTimeout = null;
 
 function animateTabTitle() {
   const currentTitle = tabTitle.substring(0, titleIndex);
@@ -71,8 +72,12 @@ function animateTabTitle() {
     // Печатаем
     titleIndex++;
     if (titleIndex === tabTitle.length) {
-      isDeleting = true;
-      setTimeout(animateTabTitle, 2000); // Пауза перед удалением
+      // Текст напечатан полностью, пауза 10 секунд
+      clearTimeout(pauseTimeout);
+      pauseTimeout = setTimeout(() => {
+        isDeleting = true;
+        animateTabTitle();
+      }, 10000);
       return;
     }
   } else {
@@ -80,7 +85,10 @@ function animateTabTitle() {
     titleIndex--;
     if (titleIndex === 0) {
       isDeleting = false;
-      setTimeout(animateTabTitle, 500); // Пауза перед печатанием
+      clearTimeout(pauseTimeout);
+      pauseTimeout = setTimeout(() => {
+        animateTabTitle();
+      }, 500);
       return;
     }
   }
