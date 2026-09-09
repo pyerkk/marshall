@@ -34,6 +34,11 @@
       <header class="card-header">
         <div class="avatar-wrap">
           <img src="./assets/avatar.jpg" alt="Аватар marshall" width="80" height="80" class="avatar-img">
+          
+          <!-- Статус-пузырёк с мини-аватаром -->
+          <div class="status-bubble" title="Статус: сидел под прокси">
+            <img src="./assets/status-avatar.jpg" alt="Статус-аватар" width="24" height="24" class="status-avatar">
+          </div>
         </div>
         
         <div class="identity">
@@ -51,15 +56,15 @@
       <!-- Статус-карточка с сообщением и музыкой -->
       <div class="status-card">
         <div class="status-message">
-          <span class="sub-username">маршалл</span>
+          <span class="sub-username">fearmyveins</span>
           <span class="status-russian">сидел под прокси в пять утра</span>
         </div>
         
         <!-- Музыкальный виджет -->
         <div class="music-widget">
           <div class="music-info">
-            <span class="track-title" id="trackTitle">вконтакте</span>
-            <span class="track-artist" id="trackArtist">хинков</span>
+            <span class="track-title" id="trackTitle">Название трека</span>
+            <span class="track-artist" id="trackArtist">Исполнитель</span>
           </div>
           
           <div class="player-controls">
@@ -85,6 +90,14 @@
               <span class="separator">/</span>
               <span class="total-time" id="totalTime">0:00</span>
             </div>
+          </div>
+          
+          <!-- Регулятор громкости -->
+          <div class="volume-control">
+            <svg class="volume-icon" viewBox="0 0 24 24" width="16" height="16" aria-label="Громкость">
+              <path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+            <input type="range" id="volumeSlider" min="0" max="100" value="30" class="volume-slider">
           </div>
         </div>
       </div>
