@@ -555,7 +555,7 @@ html, body {
   justify-content: center;
   transition: transform 0.2s ease;
   position: absolute;
-  margin-left: 65px; /* Подберите значение */
+  margin-left: 200px; /* Подберите значение */
   margin-top: 20px;   /* Подберите значение */
 }
 
@@ -564,8 +564,8 @@ html, body {
 }
 
 .telegram-icon {
-  width: 64px;
-  height: 64px;
+  width: 128px;
+  height: 128px;
   border-radius: 50%;
   object-fit: cover;
   filter: grayscale(0.3);
