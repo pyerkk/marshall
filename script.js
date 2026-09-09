@@ -12,10 +12,10 @@ const CONFIG = {
   audioPath: './assets/track.mp3',
   
   // Название трека
-  trackTitle: 'Название трека',
+  trackTitle: 'вконтакте',
   
   // Имя исполнителя
-  trackArtist: 'Исполнитель',
+  trackArtist: 'хинков',
   
   // Настройки дождя
   rain: {
