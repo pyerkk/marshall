@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Создаём аудио-объект
   const audio = new Audio(CONFIG.audioPath);
   audio.preload = 'metadata';
-  audio.volume = 0.15; // Устанавливаем громкость 15%
+  audio.volume = 0.15; // Устанавливаем громкость 30%
   
   // Получаем ссылки на DOM-элементы
   const playBtn = document.getElementById(CONFIG.elements.playBtn);
@@ -199,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
       
       currentTimeEl.textContent = formatTime(audio.currentTime);
       totalTimeEl.textContent = formatTime(audio.duration);
-      progressContainer.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
     }
     
     animationFrameId = requestAnimationFrame(updateProgress);
@@ -326,26 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  progressContainer.addEventListener('keydown', (e) => {
-    if (!audio.duration) return;
-
-    const step = e.shiftKey ? 10 : 5;
-    let nextTime = audio.currentTime;
-
-    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') nextTime += step;
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') nextTime -= step;
-    else if (e.key === 'Home') nextTime = 0;
-    else if (e.key === 'End') nextTime = audio.duration;
-    else return;
-
-    e.preventDefault();
-    audio.currentTime = Math.max(0, Math.min(audio.duration, nextTime));
-    const progress = audio.currentTime / audio.duration;
-    progressBar.style.transform = `scaleX(${progress})`;
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-    progressContainer.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
-  });
-  
   function updateProgressFromPointer(e) {
     const rect = progressContainer.getBoundingClientRect();
     let x = (e.clientX - rect.left) / rect.width;
@@ -357,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const thumbX = x * rect.width;
       progressThumb.style.transform = `translate(-50%, -50%) translateX(${thumbX}px)`;
       currentTimeEl.textContent = formatTime(audio.currentTime);
-      progressContainer.setAttribute('aria-valuenow', String(Math.round(x * 100)));
     }
   }
   
@@ -367,33 +345,26 @@ document.addEventListener('DOMContentLoaded', () => {
   setPlayingState(false);
   audio.load();
   
-  // Пытаемся запустить музыку сразу. Браузер может запретить звук
-  // до первого взаимодействия пользователя со страницей.
-  function enableAutoplayFallback() {
-    const startAfterInteraction = (event) => {
-      // Кнопка Play сама управляет воспроизведением — не дублируем её обработчик.
-      if (event.target.closest?.('#playBtn')) return;
-
-      audio.play().then(() => {
-        setPlayingState(true);
-        startAnimationLoop();
-        document.removeEventListener('pointerdown', startAfterInteraction);
-        document.removeEventListener('keydown', startAfterInteraction);
-      }).catch(error => {
-        console.log('Ошибка автозапуска после взаимодействия:', error);
-      });
-    };
-
-    document.addEventListener('pointerdown', startAfterInteraction);
-    document.addEventListener('keydown', startAfterInteraction);
-  }
-
+  // Пытаемся автоматически запустить воспроизведение
   audio.play().then(() => {
     setPlayingState(true);
     startAnimationLoop();
-  }).catch(() => {
+    console.log('Автовоспроизведение запущено');
+  }).catch(err => {
+    console.log('Автовоспроизведение заблокировано браузером. Нажмите play.');
     setPlayingState(false);
-    enableAutoplayFallback();
+    
+    // Автозапуск после первого взаимодействия с страницей
+    document.addEventListener('click', () => {
+      if (!isPlaying) {
+        audio.play().then(() => {
+          setPlayingState(true);
+          startAnimationLoop();
+        }).catch(error => {
+          console.log('Ошибка воспроизведения:', error);
+        });
+      }
+    }, { once: true });
   });
   
   console.log('Аудио инициализировано:', CONFIG.audioPath);
