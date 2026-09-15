@@ -367,8 +367,34 @@ document.addEventListener('DOMContentLoaded', () => {
   setPlayingState(false);
   audio.load();
   
-  // Воспроизведение запускается только явным нажатием кнопки Play.
-  // Это предотвращает неожиданный запуск музыки при клике по ссылкам или странице.
+  // Пытаемся запустить музыку сразу. Браузер может запретить звук
+  // до первого взаимодействия пользователя со страницей.
+  function enableAutoplayFallback() {
+    const startAfterInteraction = (event) => {
+      // Кнопка Play сама управляет воспроизведением — не дублируем её обработчик.
+      if (event.target.closest?.('#playBtn')) return;
+
+      audio.play().then(() => {
+        setPlayingState(true);
+        startAnimationLoop();
+        document.removeEventListener('pointerdown', startAfterInteraction);
+        document.removeEventListener('keydown', startAfterInteraction);
+      }).catch(error => {
+        console.log('Ошибка автозапуска после взаимодействия:', error);
+      });
+    };
+
+    document.addEventListener('pointerdown', startAfterInteraction);
+    document.addEventListener('keydown', startAfterInteraction);
+  }
+
+  audio.play().then(() => {
+    setPlayingState(true);
+    startAnimationLoop();
+  }).catch(() => {
+    setPlayingState(false);
+    enableAutoplayFallback();
+  });
   
   console.log('Аудио инициализировано:', CONFIG.audioPath);
 });
