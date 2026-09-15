@@ -12,8 +12,6 @@
   /* Путь к главному аватару профиля */
   --avatar-path: url("./assets/avatar.jpg");
   
-  /* Путь к аудиофайлу */
-  --audio-path: "./assets/track.mp3";
 }
 
 /* ------------------------------------------------------------
@@ -553,10 +551,9 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
   transition: transform 0.2s ease;
-  position: absolute;
-  margin-left: 200px; /* Подберите значение */
-  margin-top: 20px;   /* Подберите значение */
 }
 
 .telegram-link:hover {
@@ -564,8 +561,8 @@ html, body {
 }
 
 .telegram-icon {
-  width: 128px;
-  height: 128px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
   filter: grayscale(0.3);
@@ -574,4 +571,30 @@ html, body {
 
 .telegram-link:hover .telegram-icon {
   filter: grayscale(0);
+}
+
+.play-btn:focus-visible,
+.progress-container:focus-visible,
+.volume-slider:focus-visible,
+.telegram-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .rain-container {
+    display: none;
+  }
+
+  .floating-card {
+    transform: none;
+  }
 }
